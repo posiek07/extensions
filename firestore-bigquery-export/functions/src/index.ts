@@ -20,7 +20,7 @@ import {
   ChangeType,
   FirestoreBigQueryEventHistoryTracker,
   FirestoreEventHistoryTracker,
-} from "@firebaseextensions/firestore-bigquery-change-tracker";
+} from "@posiek07/fbct";
 import * as logs from "./logs";
 import { getChangeType, getDocumentId } from "./util";
 
@@ -30,6 +30,7 @@ const eventTracker: FirestoreEventHistoryTracker = new FirestoreBigQueryEventHis
     datasetId: config.datasetId,
     datasetLocation: config.datasetLocation,
     tablePartitioning: config.tablePartitioning,
+    tablePartitioningField: config.tablePartitioningField,
   }
 );
 
@@ -38,6 +39,10 @@ logs.init();
 exports.fsexportbigquery = functions.handler.firestore.document.onWrite(
   async (change, context) => {
     logs.start();
+    console.log(
+      "TABLE PARTITIONING FIELD: " +
+        change.after.data()[config.tablePartitioningField]
+    );
     try {
       const changeType = getChangeType(change);
       const documentId = getDocumentId(change);
@@ -50,6 +55,9 @@ exports.fsexportbigquery = functions.handler.firestore.document.onWrite(
           eventId: context.eventId,
           data:
             changeType === ChangeType.DELETE ? undefined : change.after.data(),
+          partitioning_field: change.after.data()[
+            config.tablePartitioningField
+          ],
         },
       ]);
       logs.complete();

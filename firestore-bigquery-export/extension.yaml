@@ -249,4 +249,13 @@ params:
         value: NONE
     default: NONE
     required: true
+
+  - param: TABLE_PARTITIONING_FIELD
+    label: BigQuery SQL table partitioning option
+    description: >-
+      This parameter will allow you to partition the BigQuery table and BigQuery view 
+      created by the extension based on field. This will generate one partition based on selected field.
+    type: string
+    required: false
+  
     

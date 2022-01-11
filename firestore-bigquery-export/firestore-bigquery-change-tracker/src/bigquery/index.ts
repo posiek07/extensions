@@ -34,6 +34,7 @@ import {
   InsertRowsOptions,
   TableMetadata,
 } from "@google-cloud/bigquery/build/src/table";
+import { logger } from "firebase-functions";
 
 export { RawChangelogSchema, RawChangelogViewSchema } from "./schema";
 
@@ -42,6 +43,7 @@ export interface FirestoreBigQueryEventHistoryTrackerConfig {
   tableId: string;
   datasetLocation: string | undefined;
   tablePartitioning: string;
+  tablePartitioningField: string;
 }
 
 /**
@@ -70,6 +72,7 @@ export class FirestoreBigQueryEventHistoryTracker
     await this.initialize();
 
     const rows = events.map((event) => {
+      logger.log(event.data[this.config.tablePartitioningField]);
       return {
         insertId: event.eventId,
         json: {
@@ -79,6 +82,9 @@ export class FirestoreBigQueryEventHistoryTracker
           document_id: event.documentId,
           operation: ChangeType[event.operation],
           data: JSON.stringify(this.serializeData(event.data)),
+          partitioning_field: event.data[
+            this.config.tablePartitioningField
+          ].toDate(),
         },
       };
     });
@@ -180,6 +186,9 @@ export class FirestoreBigQueryEventHistoryTracker
       }
       // Reinitializing in case the destintation table is modified.
       this.initialized = false;
+      logger.log(e);
+      logger.log(e.errors[0]);
+      logger.log(e.response.insertErrors);
       throw e;
     }
   }
@@ -251,6 +260,13 @@ export class FirestoreBigQueryEventHistoryTracker
         };
       }
 
+      if (this.config.tablePartitioningField) {
+        options.timePartitioning = {
+          ...options.timePartitioning,
+          field: "partitioning_field",
+        };
+      }
+
       await table.create(options);
       logs.bigQueryTableCreated(changelogName);
     }
@@ -300,6 +316,10 @@ export class FirestoreBigQueryEventHistoryTracker
           type: this.config.tablePartitioning,
         };
       }
+
+      logger.log(view);
+
+      logger.log(options);
       await view.create(options);
       await view.setMetadata({ schema: RawChangelogViewSchema });
       logs.bigQueryViewCreated(this.rawLatestView());

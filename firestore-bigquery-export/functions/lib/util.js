@@ -16,15 +16,15 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDocumentId = exports.getChangeType = void 0;
-const firestore_bigquery_change_tracker_1 = require("@firebaseextensions/firestore-bigquery-change-tracker");
+const fbct_1 = require("@posiek07/fbct");
 function getChangeType(change) {
     if (!change.after.exists) {
-        return firestore_bigquery_change_tracker_1.ChangeType.DELETE;
+        return fbct_1.ChangeType.DELETE;
     }
     if (!change.before.exists) {
-        return firestore_bigquery_change_tracker_1.ChangeType.CREATE;
+        return fbct_1.ChangeType.CREATE;
     }
-    return firestore_bigquery_change_tracker_1.ChangeType.UPDATE;
+    return fbct_1.ChangeType.UPDATE;
 }
 exports.getChangeType = getChangeType;
 function getDocumentId(change) {

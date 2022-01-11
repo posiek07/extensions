@@ -17,7 +17,7 @@
 import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
 import { Change } from "firebase-functions";
 
-import { ChangeType } from "@firebaseextensions/firestore-bigquery-change-tracker";
+import { ChangeType } from "@posiek07/fbct";
 
 export function getChangeType(change: Change<DocumentSnapshot>): ChangeType {
   if (!change.after.exists) {
