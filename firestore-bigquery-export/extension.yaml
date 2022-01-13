@@ -251,11 +251,22 @@ params:
     required: true
 
   - param: TABLE_PARTITIONING_FIELD
-    label: BigQuery SQL table partitioning option
+    label: BigQuery SQL table partitioning field option
     description: >-
-      This parameter will allow you to partition the BigQuery table and BigQuery view 
-      created by the extension based on field. This will generate one partition based on selected field.
+      This parameter will allow you to partition the BigQuery table
+      created by the extension based on selected Document Firestore field. This will generate one partition based on selected field. If not set, the table is partitioned by pseudo column '_PARTITIONTIME'; if set, the table is partitioned by this field. The field must be a top-level TIMESTAMP or DATE field.
     type: string
     required: false
-  
-    
+
+  - param: TABLE_PARTITIONING_FIELD_TYPE
+    label: BigQuery SQL table partitioning field type option
+    description: >-
+      TimePartitioning field type.
+    type: select
+    options:
+      - label: TIMESTAMP
+        value: TIMESTAMP
+      - label: DATE
+        value: DATE
+    default: NONE
+    required: false  

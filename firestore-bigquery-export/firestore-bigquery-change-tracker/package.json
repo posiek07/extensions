@@ -1,6 +1,6 @@
 {
   "name": "@posiek07/fbct",
-  "version": "1.1.22",
+  "version": "1.1.23",
   "description": "Core change-tracker library for Cloud Firestore Collection BigQuery Exports",
   "main": "./lib/index.js",
   "scripts": {

@@ -55,7 +55,7 @@ exports.fsexportbigquery = functions.handler.firestore.document.onWrite(
           eventId: context.eventId,
           data:
             changeType === ChangeType.DELETE ? undefined : change.after.data(),
-          partitioning_field: change.after.data()[
+          [config.tablePartitioningField]: change.after.data()[
             config.tablePartitioningField
           ],
         },

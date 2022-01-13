@@ -67,11 +67,11 @@ export const documentIdField = {
 };
 
 export const partitionedField = {
-  name: "partitioning_field",
+  name: process.env.TABLE_PARTITIONING_FIELD,
   mode: "NULLABLE",
   type: "TIMESTAMP",
-  description: "The document partition field selected by user"
-}
+  description: "The document partition field selected by user",
+};
 
 /*
  * We cannot specify a schema for view creation, and all view columns default
@@ -114,7 +114,7 @@ export const RawChangelogViewSchema: any = {
         "The full JSON representation of the current document state.",
     },
     documentIdField,
-    partitionedField
+    partitionedField,
   ],
 };
 
@@ -155,6 +155,6 @@ export const RawChangelogSchema: any = {
         "The full JSON representation of the document state after the indicated operation is applied. This field will be null for DELETE operations.",
     },
     documentIdField,
-    partitionedField
+    partitionedField,
   ],
 };

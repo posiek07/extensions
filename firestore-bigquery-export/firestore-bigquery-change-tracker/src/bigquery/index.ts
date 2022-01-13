@@ -82,7 +82,7 @@ export class FirestoreBigQueryEventHistoryTracker
           document_id: event.documentId,
           operation: ChangeType[event.operation],
           data: JSON.stringify(this.serializeData(event.data)),
-          partitioning_field: event.data[
+          [this.config.tablePartitioningField]: event.data[
             this.config.tablePartitioningField
           ].toDate(),
         },
@@ -263,7 +263,7 @@ export class FirestoreBigQueryEventHistoryTracker
       if (this.config.tablePartitioningField) {
         options.timePartitioning = {
           ...options.timePartitioning,
-          field: "partitioning_field",
+          field: this.config.tablePartitioningField,
         };
       }
 
