@@ -40,8 +40,9 @@ const trackerInstance = new FirestoreBigQueryEventHistoryTracker({
   datasetId: "id",
   datasetLocation: undefined,
   tableId: "id",
-  tablePartitioning: null,
-  tablePartitioningField: null,
+  timePartitioning: null,
+  timePartitioningField: null,
+  timePartitioningFieldType: undefined,
 });
 
 async function readFormattedSQL(file: string): Promise<string> {

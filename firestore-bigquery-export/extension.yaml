@@ -228,7 +228,7 @@ params:
     default: posts
     required: true
 
-  - param: TABLE_PARTITIONING
+  - param: TIME_PARTITIONING
     label: BigQuery SQL table partitioning option
     description: >-
       This parameter will allow you to partition the BigQuery table and BigQuery view 
@@ -250,7 +250,7 @@ params:
     default: NONE
     required: true
 
-  - param: TABLE_PARTITIONING_FIELD
+  - param: TIME_PARTITIONING_FIELD
     label: BigQuery SQL table partitioning field option
     description: >-
       This parameter will allow you to partition the BigQuery table
@@ -258,7 +258,7 @@ params:
     type: string
     required: false
 
-  - param: TABLE_PARTITIONING_FIELD_TYPE
+  - param: TIME_PARTITIONING_FIELD_TYPE
     label: BigQuery SQL table partitioning field type option
     description: >-
       TimePartitioning field type.

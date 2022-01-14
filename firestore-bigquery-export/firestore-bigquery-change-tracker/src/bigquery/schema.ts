@@ -66,17 +66,30 @@ export const documentIdField = {
   description: "The document id as defined in the firestore database.",
 };
 
-export const partitionedField = {
-  name: process.env.TABLE_PARTITIONING_FIELD,
-  mode: "NULLABLE",
-  type: "TIMESTAMP",
-  description: "The document partition field selected by user",
-};
-
 /*
  * We cannot specify a schema for view creation, and all view columns default
  * to the NULLABLE mode.
  */
+
+export const getRawChangelogPartitioned = (
+  partitioningField: string,
+  partitioningFieldType: string, 
+  isView: boolean
+) => {
+  return {
+    fields: [
+      ...(isView ? RawChangelogViewSchema.fields : RawChangelogSchema.fields),
+      {
+        name: partitioningField,
+        mode: "NULLABLE",
+        type: partitioningFieldType,
+        description: "The document partition field selected by user",
+      },
+    ],
+  };
+};
+
+
 export const RawChangelogViewSchema: any = {
   fields: [
     {
@@ -114,7 +127,6 @@ export const RawChangelogViewSchema: any = {
         "The full JSON representation of the current document state.",
     },
     documentIdField,
-    partitionedField,
   ],
 };
 
@@ -155,6 +167,5 @@ export const RawChangelogSchema: any = {
         "The full JSON representation of the document state after the indicated operation is applied. This field will be null for DELETE operations.",
     },
     documentIdField,
-    partitionedField,
   ],
 };

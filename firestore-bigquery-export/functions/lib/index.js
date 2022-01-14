@@ -24,14 +24,14 @@ const eventTracker = new fbct_1.FirestoreBigQueryEventHistoryTracker({
     tableId: config_1.default.tableId,
     datasetId: config_1.default.datasetId,
     datasetLocation: config_1.default.datasetLocation,
-    tablePartitioning: config_1.default.tablePartitioning,
-    tablePartitioningField: config_1.default.tablePartitioningField,
+    timePartitioning: config_1.default.timePartitioning,
+    timePartitioningField: config_1.default.timePartitioningField,
 });
 logs.init();
 exports.fsexportbigquery = functions.handler.firestore.document.onWrite(async (change, context) => {
     logs.start();
     console.log("TABLE PARTITIONING FIELD: " +
-        change.after.data()[config_1.default.tablePartitioningField]);
+        change.after.data()[config_1.default.timePartitioningField]);
     try {
         const changeType = util_1.getChangeType(change);
         const documentId = util_1.getDocumentId(change);
@@ -43,7 +43,7 @@ exports.fsexportbigquery = functions.handler.firestore.document.onWrite(async (c
                 documentId: documentId,
                 eventId: context.eventId,
                 data: changeType === fbct_1.ChangeType.DELETE ? undefined : change.after.data(),
-                [config_1.default.tablePartitioningField]: change.after.data()[config_1.default.tablePartitioningField],
+                [config_1.default.timePartitioningField]: change.after.data()[config_1.default.timePartitioningField],
             },
         ]);
         logs.complete();

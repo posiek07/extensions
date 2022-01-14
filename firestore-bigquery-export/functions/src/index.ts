@@ -29,8 +29,8 @@ const eventTracker: FirestoreEventHistoryTracker = new FirestoreBigQueryEventHis
     tableId: config.tableId,
     datasetId: config.datasetId,
     datasetLocation: config.datasetLocation,
-    tablePartitioning: config.tablePartitioning,
-    tablePartitioningField: config.tablePartitioningField,
+    timePartitioning: config.timePartitioning,
+    timePartitioningField: config.timePartitioningField,
   }
 );
 
@@ -41,7 +41,7 @@ exports.fsexportbigquery = functions.handler.firestore.document.onWrite(
     logs.start();
     console.log(
       "TABLE PARTITIONING FIELD: " +
-        change.after.data()[config.tablePartitioningField]
+        change.after.data()[config.timePartitioningField]
     );
     try {
       const changeType = getChangeType(change);
@@ -55,8 +55,8 @@ exports.fsexportbigquery = functions.handler.firestore.document.onWrite(
           eventId: context.eventId,
           data:
             changeType === ChangeType.DELETE ? undefined : change.after.data(),
-          [config.tablePartitioningField]: change.after.data()[
-            config.tablePartitioningField
+          [config.timePartitioningField]: change.after.data()[
+            config.timePartitioningField
           ],
         },
       ]);

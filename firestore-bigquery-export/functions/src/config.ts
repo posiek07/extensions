@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-function tablePartitioning(type) {
+function timePartitioning(type) {
   if (
     type === "HOUR" ||
     type === "DAY" ||
@@ -34,6 +34,7 @@ export default {
   location: process.env.LOCATION,
   initialized: false,
   datasetLocation: process.env.DATASET_LOCATION,
-  tablePartitioning: tablePartitioning(process.env.TABLE_PARTITIONING),
-  tablePartitioningField: process.env.TABLE_PARTITIONING_FIELD,
+  timePartitioning: timePartitioning(process.env.TIME_PARTITIONING),
+  timePartitioningField: process.env.TIME_PARTITIONING_FIELD,
+  timePartitioningFieldType: process.env.TIME_PARTITIONING_FIELD_TYPE,
 };
