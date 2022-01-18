@@ -36,5 +36,9 @@ export default {
   datasetLocation: process.env.DATASET_LOCATION,
   timePartitioning: timePartitioning(process.env.TIME_PARTITIONING),
   timePartitioningField: process.env.TIME_PARTITIONING_FIELD,
-  timePartitioningFieldType: process.env.TIME_PARTITIONING_FIELD_TYPE,
+  timePartitioningFieldType:
+    process.env.TIME_PARTITIONING_FIELD_TYPE !== "omit"
+      ? process.env.TIME_PARTITIONING_FIELD_TYPE
+      : undefined,
+  timePartitioningFirestoreField: process.env.TIME_PARTITIONING_FIRESTORE_FIELD,
 };

@@ -46,6 +46,7 @@ export interface FirestoreBigQueryEventHistoryTrackerConfig {
   timePartitioning: string;
   timePartitioningField: string | undefined;
   timePartitioningFieldType: string | undefined;
+  timePartitioningFirestoreField: string | undefined;
 }
 
 /**
@@ -74,7 +75,9 @@ export class FirestoreBigQueryEventHistoryTracker
     await this.initialize();
 
     const rows = events.map((event) => {
-      logger.log(event.data[this.config.timePartitioningField]);
+      const timePartitioningFirestoreField = this.config
+        .timePartitioningFirestoreField;
+      const timePartitioningField = this.config.timePartitioningField;
       return {
         insertId: event.eventId,
         json: {
@@ -84,9 +87,16 @@ export class FirestoreBigQueryEventHistoryTracker
           document_id: event.documentId,
           operation: ChangeType[event.operation],
           data: JSON.stringify(this.serializeData(event.data)),
-          [this.config.timePartitioningField]: event.data[
-            this.config.timePartitioningField
-          ].toDate(),
+
+          //attach property if Firestore Field avalible. 
+          ...(timePartitioningFirestoreField &&
+            timePartitioningField &&
+            event.data[timePartitioningFirestoreField] && {
+              [timePartitioningField]:
+                typeof event.data[timePartitioningFirestoreField] === "string"
+                  ? event.data[timePartitioningFirestoreField]
+                  : event.data[timePartitioningFirestoreField].toDate(),
+            }),
         },
       };
     });
@@ -302,7 +312,9 @@ export class FirestoreBigQueryEventHistoryTracker
       if (!documentIdColExists) {
         metadata.view = latestConsistentSnapshotView(
           this.config.datasetId,
-          this.rawChangeLogTableName()
+          this.rawChangeLogTableName(),
+          this.config.timePartitioningField,
+          this.config.timePartitioningFieldType
         );
 
         await view.setMetadata(metadata);
@@ -311,7 +323,9 @@ export class FirestoreBigQueryEventHistoryTracker
     } else {
       const latestSnapshot = latestConsistentSnapshotView(
         this.config.datasetId,
-        this.rawChangeLogTableName()
+        this.rawChangeLogTableName(),
+        this.config.timePartitioningField,
+        this.config.timePartitioningFieldType
       );
       logs.bigQueryViewCreating(this.rawLatestView(), latestSnapshot.query);
       const options: TableMetadata = {

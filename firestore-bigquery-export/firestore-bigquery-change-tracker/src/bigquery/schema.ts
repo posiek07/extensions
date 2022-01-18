@@ -73,22 +73,30 @@ export const documentIdField = {
 
 export const getRawChangelogPartitioned = (
   partitioningField: string,
-  partitioningFieldType: string, 
+  partitioningFieldType: string,
   isView: boolean
 ) => {
+  const isFieldExist =
+    RawChangelogSchema.fields.find(
+      (field: { name: string }) => field.name === partitioningField
+    ) ||
+    RawChangelogViewSchema.fields.find(
+      (field: { name: string }) => field.name === partitioningField
+    );
   return {
     fields: [
       ...(isView ? RawChangelogViewSchema.fields : RawChangelogSchema.fields),
-      {
-        name: partitioningField,
-        mode: "NULLABLE",
-        type: partitioningFieldType,
-        description: "The document partition field selected by user",
-      },
+      ...(!isFieldExist && [
+        {
+          name: partitioningField,
+          mode: "NULLABLE",
+          type: partitioningFieldType,
+          description: "The document partition field selected by user",
+        },
+      ]),
     ],
   };
 };
-
 
 export const RawChangelogViewSchema: any = {
   fields: [
