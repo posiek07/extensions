@@ -227,8 +227,8 @@ params:
   - param: IMAGE_TYPE
     label: Convert image to preferred types
     description: >
-      The image types you'd like your source image to convert to. The default for this option will 
-      be to keep the original file type.
+      The image types you'd like your source image to convert to. 
+      The default for this option will be to keep the original file type as the destination file type.
     type: multiSelect
     options:
       - label: jpeg
@@ -241,5 +241,15 @@ params:
         value: tiff
       - label: original
         value: false
-    default: false
     required: true
+
+  - param: CACHE_CONTROL_HEADER_1
+    label: Cache-Control header for resized images
+    description: >
+      This extension automatically copies any `Cache-Control` metadata from the original image
+      to the resized images. For the resized images, do you want to overwrite this copied
+      `Cache-Control` metadata or add `Cache-Control` metadata? Learn more about
+      [`Cache-Control` headers](https://developer.mozilla.org/docs/Web/HTTP/Headers/Cache-Control).
+      If you prefer not to overwrite or add `Cache-Control` metadata, leave this field empty.
+    example: max-age=86400
+    required: false
